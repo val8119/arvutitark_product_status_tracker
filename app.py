@@ -2,15 +2,17 @@ import requests
 import time
 import datetime
 from bs4 import BeautifulSoup
-import tkinter
-from tkinter import messagebox
+import win32api
 
 
 print("Enter your product tracking URL:")
 url = input("> ").strip()
 
-print("Enter the delay in seconds(eg. 3600 = 1 hour):")
+print("Enter the delay in seconds (eg. 3600 = 1 hour):")
 delay = int(input("> "))
+
+old_status = ""
+current_status = ""
 
 break_loop = False
 
@@ -27,31 +29,33 @@ print(
 
 
 def check_status():
-    global break_loop
+    global break_loop, old_status, current_status, url
 
     page = requests.get(url, headers=headers)
 
     soup = BeautifulSoup(page.content, "html.parser")
 
-    status = soup.find_all("td", valign="top")[5].text
+    current_status = soup.find_all("td", valign="top")[5].text
 
     print(f"Checking status..")
 
-    print(f"Current status: {status}\n")
+    print(f"Current status: {current_status}\n")
 
-    if status != "Tellimata":
-        print(f"<!-- PRODUCT STATUS HAS CHANGED --!>")
+    if current_status != old_status:
+        print("<!-- PRODUCT STATUS HAS CHANGED --!>")
+        print(f"New status: {current_status}")
 
-        show_popup()
+        show_popup(current_status)
 
-        break_loop = True
+        if current_status == "esinduses":
+            break_loop = True
+
+    old_status = current_status
 
 
-def show_popup():
-    root = tkinter.Tk()
-    root.withdraw()
-
-    messagebox.showinfo("Arvutitark", "Product status has changed!")
+def show_popup(status):
+    win32api.MessageBox(
+        0, f"The product status has changed!\nNew status: {status}", "Arvutitark", 0x00001000)
 
 
 while True:
@@ -65,7 +69,7 @@ while True:
     check_status()
 
     if break_loop:
-        print("Stopped the tracker.")
+        print("The product has arrived.\nStopping the tracker.")
         break
 
     time.sleep(delay)
