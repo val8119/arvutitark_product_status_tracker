@@ -6,6 +6,8 @@ import tkinter
 from tkinter import messagebox
 
 
+break_loop = False
+
 hours = 0
 
 url = "https://arvutitark.ee/est/tracking/ER34AFJTTT"
@@ -21,17 +23,23 @@ print(
 
 
 def check_status():
+    global break_loop
+
     page = requests.get(url, headers=headers)
 
     soup = BeautifulSoup(page.content, "html.parser")
 
-    status = soup.find_all("td", valign="top")[2]
+    status = soup.find_all("td", valign="top")[5].text
 
-    print(f"CHECKING STATUS..")
+    print(f"Checking status..")
 
-    if status != "Tellimatta":
-        print(f"PRODUCT STATUS HAS CHANGED")
+    print(f"Current status: {status}\n")
+
+    if status != "Tellimata":
+        print(f"<!-- PRODUCT STATUS HAS CHANGED --!>")
         show_popup()
+
+        break_loop = True
 
 
 def show_popup():
@@ -44,7 +52,14 @@ def show_popup():
 while True:
     now = datetime.datetime.now()
     date_time = now.strftime("%Y-%m-%d %H:%M:%S")
-    print(f"Checked price at {date_time} ({hours} hours)")
+
+    print(f"\nChecked price at {date_time} ({hours} hours)")
+
     check_status()
+
+    if break_loop:
+        print("Stopped the tracker.")
+        break
+
     time.sleep(3600)
     hours += 1
