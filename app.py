@@ -37,6 +37,7 @@ def check_status():
 
     if status != "Tellimata":
         print(f"<!-- PRODUCT STATUS HAS CHANGED --!>")
+
         show_popup()
 
         break_loop = True
