@@ -2,5 +2,6 @@
  Track the status of any arvutitark order!
  
  - Set a custom URL
- - Check the status every hour
+ - Set a custom delay
+ - Check the status at given delay
  - Show a popup if the status changes
