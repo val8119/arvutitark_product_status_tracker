@@ -6,11 +6,15 @@ import tkinter
 from tkinter import messagebox
 
 
+print("Enter your product tracking URL:")
+url = input("> ").strip()
+
+print("Enter the delay in seconds(eg. 3600 = 1 hour):")
+delay = int(input("> "))
+
 break_loop = False
 
-hours = 0
-
-url = "https://arvutitark.ee/est/tracking/ER34AFJTTT"
+check_count = 0
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"}
@@ -54,7 +58,9 @@ while True:
     now = datetime.datetime.now()
     date_time = now.strftime("%Y-%m-%d %H:%M:%S")
 
-    print(f"\nChecked price at {date_time} ({hours} hours)")
+    check_count += 1
+
+    print(f"\nChecked price at {date_time} ({check_count} time(s))")
 
     check_status()
 
@@ -62,5 +68,4 @@ while True:
         print("Stopped the tracker.")
         break
 
-    time.sleep(3600)
-    hours += 1
+    time.sleep(delay)
