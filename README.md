@@ -7,4 +7,4 @@
  - Check the status at given delay
  - Show a popup if the status changes
  
- (WARNING: Only works with single products, if you have multiple products it won't work)
+ (WARNING: Designed with a single product in mind, if you have more than one it probably won't work)
